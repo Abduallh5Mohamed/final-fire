@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../Services/auth.service';
 
 @Component({
   selector: 'app-technicians',
@@ -10,6 +11,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './technicians.component.css',
 })
 export class TechniciansComponent {
+  constructor(private authService: AuthService) {}
+
   showAddTechnicianModal = false;
   showPassword = false; // متغير للتحكم في إظهار/إخفاء كلمة المرور
 
