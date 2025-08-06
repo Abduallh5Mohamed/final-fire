@@ -11,6 +11,8 @@ import { AuthService } from '../../../Services/auth.service';
 })
 export class SignUpComponent {
   signUpForm: FormGroup;
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,6 +42,14 @@ export class SignUpComponent {
       }
     }
     return '';
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onSubmit() {
