@@ -120,6 +120,26 @@
            <span class="radio-checkmark"></span>
            <span class="radio-text">Admin Account</span>
          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="userRole"
+              value="technician"
+              formControlName="userRole"
+            />
+            <span class="radio-checkmark"></span>
+            <span class="radio-text">Technician Account</span>
+          </label>
+          <label class="radio-label">
+            <input
+              type="radio"
+              name="userRole"
+              value="driver"
+              formControlName="userRole"
+            />
+            <span class="radio-checkmark"></span>
+            <span class="radio-text">Driver Account</span>
+          </label>
        </div>
        <div class="error-message" *ngIf="getFieldError('userRole')">
          {{ getFieldError('userRole') }}

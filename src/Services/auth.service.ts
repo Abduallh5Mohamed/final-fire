@@ -42,31 +42,33 @@ export class AuthService {
   }
 
   // Sign up with email and password
-   async signUp(email: string, password: string, displayName: string, role: string = 'user'): Promise<void> {
+  async signUp(email: string, password: string, displayName: string, role: string = 'user'): Promise<void> {
     try {
       const credential = await createUserWithEmailAndPassword(this.auth, email, password);
       
       // Update profile with display name
       await updateProfile(credential.user, { displayName });
       
-       // Send email verification only for regular users
-       if (role === 'user') {
-         await sendEmailVerification(credential.user);
-       }
+      // Send email verification only for regular users
+      if (role === 'user') {
+        await sendEmailVerification(credential.user);
+      }
       
       // Create user document in Firestore
       const userData: UserData = {
         uid: credential.user.uid,
         email: credential.user.email!,
         displayName,
-         role: role as 'user' | 'admin' | 'technician' | 'driver',
+        role: role as 'user' | 'admin' | 'technician' | 'driver',
         createdAt: new Date(),
         lastLoginAt: new Date(),
-         emailVerified: role === 'admin' // Admins don't need email verification
+        emailVerified: role === 'admin' // Admins don't need email verification
       };
       
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userData);
       this.userDataSubject.next(userData);
+      
+      // Don't navigate here - let the component handle navigation
       
     } catch (error: any) {
       throw this.handleAuthError(error);
@@ -80,21 +82,9 @@ export class AuthService {
       
       // Update last login time
       await this.updateLastLogin(credential.user.uid);
-       
-       // Get user data to check role
-       const userDoc = await getDoc(doc(this.firestore, 'users', credential.user.uid));
-       if (userDoc.exists()) {
-         const userData = userDoc.data() as UserData;
-         
-         // Navigate based on user role
-         if (userData.role === 'admin') {
-           this.router.navigate(['/admin']);
-         } else if (userData.emailVerified) {
-           this.router.navigate(['/customer/dashboard']);
-         } else {
-           this.router.navigate(['/auth/pending-verification']);
-         }
-       }
+      
+      // Load user data but don't navigate here - let the component handle it
+      await this.loadUserData(credential.user.uid);
       
     } catch (error: any) {
       throw this.handleAuthError(error);
@@ -168,7 +158,7 @@ export class AuthService {
   // Sign out
   async signOut(): Promise<void> {
     await signOut(this.auth);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   // Get current user
@@ -188,8 +178,21 @@ export class AuthService {
 
   // Check if email is verified
   isEmailVerified(): boolean {
+    const userData = this.userDataSubject.value;
     const user = this.currentUserSubject.value;
+    
+    // For admins, always return true
+    if (userData?.role === 'admin') {
+      return true;
+    }
+    
     return user ? user.emailVerified : false;
+  }
+
+  // Get user role
+  getUserRole(): string | null {
+    const userData = this.userDataSubject.value;
+    return userData ? userData.role : null;
   }
 
   // Private helper methods
@@ -232,6 +235,9 @@ export class AuthService {
       await setDoc(doc(this.firestore, 'users', user.uid), userData);
       this.userDataSubject.next(userData);
     } else {
+      // Load existing user data
+      const userData = userDoc.data() as UserData;
+      this.userDataSubject.next(userData);
       await this.updateLastLogin(user.uid);
     }
   }

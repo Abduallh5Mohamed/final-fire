@@ -51,15 +51,19 @@ export class SignUpComponent {
       this.errorMessage = '';
 
       try {
-         const { displayName, email, password, userRole } = this.signUpForm.value;
-         await this.authService.signUp(email, password, displayName, userRole);
-         
-         // Navigate based on user role
-         if (userRole === 'admin') {
-           this.router.navigate(['/admin']);
-         } else {
-           this.router.navigate(['/auth/pending-verification']);
-         }
+        const { displayName, email, password, userRole } = this.signUpForm.value;
+        await this.authService.signUp(email, password, displayName, userRole);
+        
+        // Navigate based on user role
+        if (userRole === 'admin') {
+          this.router.navigate(['/admin']);
+        } else if (userRole === 'technician') {
+          this.router.navigate(['/technician']);
+        } else if (userRole === 'driver') {
+          this.router.navigate(['/driver']);
+        } else {
+          this.router.navigate(['/auth/pending-verification']);
+        }
       } catch (error: any) {
         this.errorMessage = error;
       } finally {
@@ -74,7 +78,19 @@ export class SignUpComponent {
 
     try {
       await this.authService.signInWithGoogle();
-      this.router.navigate(['/dashboard']);
+      
+      // Get user role and navigate accordingly
+      const userRole = this.authService.getUserRole();
+      
+      if (userRole === 'admin') {
+        this.router.navigate(['/admin']);
+      } else if (userRole === 'technician') {
+        this.router.navigate(['/technician']);
+      } else if (userRole === 'driver') {
+        this.router.navigate(['/driver']);
+      } else {
+        this.router.navigate(['/customer/dashboard']);
+      }
     } catch (error: any) {
       this.errorMessage = error;
     } finally {
@@ -88,7 +104,19 @@ export class SignUpComponent {
 
     try {
       await this.authService.signInWithFacebook();
-      this.router.navigate(['/dashboard']);
+      
+      // Get user role and navigate accordingly
+      const userRole = this.authService.getUserRole();
+      
+      if (userRole === 'admin') {
+        this.router.navigate(['/admin']);
+      } else if (userRole === 'technician') {
+        this.router.navigate(['/technician']);
+      } else if (userRole === 'driver') {
+        this.router.navigate(['/driver']);
+      } else {
+        this.router.navigate(['/customer/dashboard']);
+      }
     } catch (error: any) {
       this.errorMessage = error;
     } finally {
