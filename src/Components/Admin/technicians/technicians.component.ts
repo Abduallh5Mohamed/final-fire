@@ -232,12 +232,44 @@ export class TechniciansComponent {
 
       this.closeAddTechnicianModal();
       
-      alert('Technician account created successfully!');
+      this.showSuccessMessage('Technician account created successfully!');
     } catch (error: any) {
-      alert('Error creating technician account: ' + error);
+      console.error('Error creating technician account:', error);
+      this.showErrorMessage('Failed to create technician account. Please try again.');
     }
   }
 
+  private showErrorMessage(message: string) {
+    const notification = document.createElement('div');
+    notification.className = 'notification error';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  private showSuccessMessage(message: string) {
+    const notification = document.createElement('div');
+    notification.className = 'notification success';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
   callTechnician(tech: any) {
     alert(`Certification: ${tech.certification} - ${tech.specialty} specialist with ${tech.experience} experience`);
   }

@@ -68,7 +68,10 @@ export class AuthService {
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userData);
       this.userDataSubject.next(userData);
       
-      // Don't navigate here - let the component handle navigation
+      // For admin-created accounts, add additional profile data
+      if (role !== 'user') {
+        await this.createExtendedProfile(credential.user.uid, role, displayName);
+      }
       
     } catch (error: any) {
       throw this.handleAuthError(error);
@@ -193,6 +196,35 @@ export class AuthService {
   getUserRole(): string | null {
     const userData = this.userDataSubject.value;
     return userData ? userData.role : null;
+  }
+
+  // Create extended profile for technicians and drivers
+  private async createExtendedProfile(uid: string, role: string, displayName: string): Promise<void> {
+    try {
+      const extendedData: any = {
+        displayName,
+        joinDate: new Date().toISOString().split('T')[0],
+        profileImage: '/assets/dashboard-img/avatar.png'
+      };
+
+      if (role === 'technician') {
+        extendedData.specialty = 'General Repair';
+        extendedData.certification = 'Certified Tech';
+        extendedData.experience = '1 Year';
+        extendedData.rating = 5.0;
+        extendedData.completedJobs = 0;
+      } else if (role === 'driver') {
+        extendedData.licenseNumber = 'EG-DL-000000';
+        extendedData.experience = '1 Year';
+        extendedData.vehicleType = 'Sedan';
+        extendedData.rating = 5.0;
+        extendedData.totalTrips = 0;
+      }
+
+      await updateDoc(doc(this.firestore, 'users', uid), extendedData);
+    } catch (error) {
+      console.error('Error creating extended profile:', error);
+    }
   }
 
   // Private helper methods

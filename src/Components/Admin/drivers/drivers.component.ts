@@ -217,10 +217,47 @@ export class DriversComponent {
       
       alert('Driver account created successfully!');
     } catch (error: any) {
-      alert('Error creating driver account: ' + error);
+      console.error('Error creating driver account:', error);
+      // Show a clean error message instead of alert
+      this.showErrorMessage('Failed to create driver account. Please try again.');
     }
   }
 
+  private showErrorMessage(message: string) {
+    // Create a clean notification instead of alert
+    const notification = document.createElement('div');
+    notification.className = 'notification error';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
+
+  private showSuccessMessage(message: string) {
+    // Create a clean success notification
+    const notification = document.createElement('div');
+    notification.className = 'notification success';
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(notification);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
+  }
   callDriver(driver: any) {
     alert(`License: ${driver.licenseNumber} - ${driver.experience} experience`);
   }
