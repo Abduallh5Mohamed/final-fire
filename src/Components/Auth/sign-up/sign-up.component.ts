@@ -67,4 +67,30 @@ export class SignUpComponent {
       console.log('Sign up form submitted:', formData);
     }
   }
+
+  signUpWithGoogle() {
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    // Handle Google sign up logic here
+    console.log('Google sign up initiated');
+    
+    // Reset loading state (this would normally be done in success/error callbacks)
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
+  }
+
+  signUpWithFacebook() {
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    // Handle Facebook sign up logic here
+    console.log('Facebook sign up initiated');
+    
+    // Reset loading state (this would normally be done in success/error callbacks)
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
+  }
 }
