@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../Services/auth.service';
 
 @Component({
   selector: 'app-technicians',
@@ -30,8 +29,6 @@ export class TechniciansComponent {
     password: '',
     image: ''
   };
-
-  constructor(private authService: AuthService) {}
 
   // خيارات الحالات المتاحة
   statusOptions = [
@@ -178,7 +175,7 @@ export class TechniciansComponent {
   }
 
   // إضافة التقني
-  addTechnician() {
+  async addTechnician() {
     if (
       !this.newTechnician.name ||
       !this.newTechnician.specialty ||
@@ -194,32 +191,47 @@ export class TechniciansComponent {
       return;
     }
 
-    const newTechnicianData = {
-      ...this.newTechnician,
-      id: this.technicians.length + 1,
-      image: this.previewImage
-    };
+    try {
+      // Create technician account in Firebase
+      await this.authService.signUp(
+        this.newTechnician.email,
+        this.newTechnician.password,
+        this.newTechnician.name,
+        'technician'
+      );
 
-    this.technicians.push(newTechnicianData);
+      // Add to local technicians array for display
+      const newTechnicianData = {
+        ...this.newTechnician,
+        id: this.technicians.length + 1,
+        image: this.previewImage
+      };
 
-    // تصفير البيانات
-    this.newTechnician = {
-      name: '',
-      specialty: '',
-      certification: '',
-      experience: '',
-      joined: '',
-      status: 'Available',
-      rating: 0,
-      completedJobs: 0,
-      email: '',
-      password: '',
-      image: ''
-    };
-    this.previewImage = null;
-    this.showPassword = false;
+      this.technicians.push(newTechnicianData);
 
-    this.closeAddTechnicianModal();
+      // تصفير البيانات
+      this.newTechnician = {
+        name: '',
+        specialty: '',
+        certification: '',
+        experience: '',
+        joined: '',
+        status: 'Available',
+        rating: 0,
+        completedJobs: 0,
+        email: '',
+        password: '',
+        image: ''
+      };
+      this.previewImage = null;
+      this.showPassword = false;
+
+      this.closeAddTechnicianModal();
+      
+      alert('Technician account created successfully!');
+    } catch (error: any) {
+      alert('Error creating technician account: ' + error);
+    }
   }
 
   callTechnician(tech: any) {
@@ -246,8 +258,3 @@ export class TechniciansComponent {
     this.showPassword = !this.showPassword;
   }
 }
-
-
-
-
-

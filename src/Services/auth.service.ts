@@ -62,7 +62,7 @@ export class AuthService {
         role: role as 'user' | 'admin' | 'technician' | 'driver',
         createdAt: new Date(),
         lastLoginAt: new Date(),
-        emailVerified: role === 'admin' // Admins don't need email verification
+        emailVerified: role !== 'user' // Only regular users need email verification
       };
       
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userData);
