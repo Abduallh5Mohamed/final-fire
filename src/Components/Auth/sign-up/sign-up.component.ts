@@ -13,6 +13,8 @@ export class SignUpComponent {
   signUpForm: FormGroup;
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
+  errorMessage: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
