@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../Services/auth.service';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.css']
+  styleUrls: ['./sign-up.component.css'],
+  imports: [ReactiveFormsModule]
 })
 export class SignUpComponent {
   signUpForm: FormGroup;
@@ -23,6 +24,22 @@ export class SignUpComponent {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required]
     });
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.signUpForm.get(fieldName);
+    if (field && field.invalid && (field.dirty || field.touched)) {
+      if (field.errors?.['required']) {
+        return `${fieldName} is required`;
+      }
+      if (field.errors?.['email']) {
+        return 'Please enter a valid email address';
+      }
+      if (field.errors?.['minlength']) {
+        return `${fieldName} must be at least ${field.errors['minlength'].requiredLength} characters`;
+      }
+    }
+    return '';
   }
 
   onSubmit() {
