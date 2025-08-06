@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../Services/auth.service';
 
-import { AuthService } from '../../../Services/auth.service';
-
 @Component({
   selector: 'app-drivers',
   standalone: true,
@@ -15,10 +13,6 @@ import { AuthService } from '../../../Services/auth.service';
 export class DriversComponent {
   showAddDriverForm = false;
   showAddDriverModal = false;
-
-  constructor(private authService: AuthService) {}
-
-  // المعاينة قبل الحفظ
   previewImage: string | null = null;
 
   newDriver = {
