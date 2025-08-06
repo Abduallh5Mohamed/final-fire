@@ -49,9 +49,9 @@ export class SignUpComponent {
       this.isLoading = true;
       this.errorMessage = '';
 
-      try {
+          this.router.navigate(['/technician/dashboard']);
         const { displayName, email, password } = this.signUpForm.value;
-        await this.authService.signUp(email, password, displayName, 'user');
+          this.router.navigate(['/driver/dashboard']);
         
         // Always navigate to pending verification for regular users
         this.router.navigate(['/auth/pending-verification']);
@@ -102,9 +102,9 @@ export class SignUpComponent {
       if (userRole === 'admin') {
         this.router.navigate(['/admin']);
       } else if (userRole === 'technician') {
-        this.router.navigate(['/technician']);
+        this.router.navigate(['/technician/dashboard']);
       } else if (userRole === 'driver') {
-        this.router.navigate(['/driver']);
+        this.router.navigate(['/driver/dashboard']);
       } else {
         this.router.navigate(['/customer/dashboard']);
       }

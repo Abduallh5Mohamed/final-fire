@@ -44,9 +44,9 @@ export class LoginComponent {
         if (userRole === 'admin') {
           this.router.navigate(['/admin']);
         } else if (userRole === 'technician') {
-          this.router.navigate(['/technician']);
+          this.router.navigate(['/technician/dashboard']);
         } else if (userRole === 'driver') {
-          this.router.navigate(['/driver']);
+          this.router.navigate(['/driver/dashboard']);
         } else if (this.authService.isEmailVerified()) {
           this.router.navigate(['/customer/dashboard']);
         } else {
@@ -73,9 +73,9 @@ export class LoginComponent {
       if (userRole === 'admin') {
         this.router.navigate(['/admin']);
       } else if (userRole === 'technician') {
-        this.router.navigate(['/technician']);
+        this.router.navigate(['/technician/dashboard']);
       } else if (userRole === 'driver') {
-        this.router.navigate(['/driver']);
+        this.router.navigate(['/driver/dashboard']);
       } else {
         this.router.navigate(['/customer/dashboard']);
       }
@@ -99,9 +99,9 @@ export class LoginComponent {
       if (userRole === 'admin') {
         this.router.navigate(['/admin']);
       } else if (userRole === 'technician') {
-        this.router.navigate(['/technician']);
+        this.router.navigate(['/technician/dashboard']);
       } else if (userRole === 'driver') {
-        this.router.navigate(['/driver']);
+        this.router.navigate(['/driver/dashboard']);
       } else {
         this.router.navigate(['/customer/dashboard']);
       }

@@ -49,7 +49,7 @@ export class AuthService {
       // Update profile with display name
       await updateProfile(credential.user, { displayName });
       
-      // Send email verification only for regular users
+      // Send email verification only for regular users (not for admin-created accounts)
       if (role === 'user') {
         await sendEmailVerification(credential.user);
       }
@@ -62,7 +62,7 @@ export class AuthService {
         role: role as 'user' | 'admin' | 'technician' | 'driver',
         createdAt: new Date(),
         lastLoginAt: new Date(),
-        emailVerified: role !== 'user' // Only regular users need email verification
+        emailVerified: role !== 'user' // Admin-created accounts (driver, technician) are auto-verified
       };
       
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userData);

@@ -31,20 +31,20 @@ export class AuthGuard implements CanActivate {
           return this.router.createUrlTree(['/auth/login']);
         }
         
-        if (routePath === 'technician' && userData.role !== 'technician') {
+        if (routePath.startsWith('technician') && userData.role !== 'technician') {
           return this.router.createUrlTree(['/auth/login']);
         }
         
-        if (routePath === 'driver' && userData.role !== 'driver') {
+        if (routePath.startsWith('driver') && userData.role !== 'driver') {
           return this.router.createUrlTree(['/auth/login']);
         }
         
-        if (routePath === 'customer' && userData.role !== 'user') {
+        if (routePath.startsWith('customer') && userData.role !== 'user') {
           return this.router.createUrlTree(['/auth/login']);
         }
         
-        // For admins, allow access without email verification
-        if (userData.role === 'admin') {
+        // For admin-created accounts (admin, driver, technician), allow access without email verification
+        if (userData.role === 'admin' || userData.role === 'driver' || userData.role === 'technician') {
           return true;
         }
         

@@ -191,6 +191,7 @@ export class TechniciansComponent {
       !this.newTechnician.password ||
       !this.previewImage
     ) {
+      alert('Please fill in all required fields');
       return;
     }
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../Services/auth.service';
 
 import { AuthService } from '../../../Services/auth.service';
 
@@ -14,6 +15,8 @@ import { AuthService } from '../../../Services/auth.service';
 export class DriversComponent {
   showAddDriverForm = false;
   showAddDriverModal = false;
+
+  constructor(private authService: AuthService) {}
 
   // المعاينة قبل الحفظ
   previewImage: string | null = null;
@@ -179,6 +182,7 @@ export class DriversComponent {
       !this.newDriver.password ||
       !this.previewImage
     ) {
+      alert('Please fill in all required fields');
       return;
     }
 
