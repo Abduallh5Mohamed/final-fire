@@ -96,6 +96,36 @@
         </div>
       </div>
 
+     <!-- User Role Selection -->
+     <div class="form-group">
+       <label>Account Type</label>
+       <div class="radio-group">
+         <label class="radio-label">
+           <input
+             type="radio"
+             name="userRole"
+             value="user"
+             formControlName="userRole"
+           />
+           <span class="radio-checkmark"></span>
+           <span class="radio-text">User Account</span>
+         </label>
+         <label class="radio-label">
+           <input
+             type="radio"
+             name="userRole"
+             value="admin"
+             formControlName="userRole"
+           />
+           <span class="radio-checkmark"></span>
+           <span class="radio-text">Admin Account</span>
+         </label>
+       </div>
+       <div class="error-message" *ngIf="getFieldError('userRole')">
+         {{ getFieldError('userRole') }}
+       </div>
+     </div>
+
       <!-- Terms and Conditions -->
       <div class="form-group checkbox-group">
         <label class="checkbox-label">

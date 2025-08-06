@@ -28,6 +28,7 @@ export class SignUpComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
+       userRole: ['user', [Validators.required]],
       acceptTerms: [false, [Validators.requiredTrue]]
     }, { validators: this.passwordMatchValidator });
   }
@@ -50,9 +51,15 @@ export class SignUpComponent {
       this.errorMessage = '';
 
       try {
-        const { displayName, email, password } = this.signUpForm.value;
-        await this.authService.signUp(email, password, displayName);
-        this.router.navigate(['/auth/pending-verification']);
+         const { displayName, email, password, userRole } = this.signUpForm.value;
+         await this.authService.signUp(email, password, displayName, userRole);
+         
+         // Navigate based on user role
+         if (userRole === 'admin') {
+           this.router.navigate(['/admin']);
+         } else {
+           this.router.navigate(['/auth/pending-verification']);
+         }
       } catch (error: any) {
         this.errorMessage = error;
       } finally {

@@ -9,7 +9,7 @@ export interface UserData {
   uid: string;
   email: string;
   displayName: string;
-  role: 'user' | 'admin' | 'technician';
+   role: 'user' | 'admin' | 'technician' | 'driver';
   createdAt: Date;
   lastLoginAt: Date;
   emailVerified: boolean;
@@ -42,25 +42,27 @@ export class AuthService {
   }
 
   // Sign up with email and password
-  async signUp(email: string, password: string, displayName: string): Promise<void> {
+   async signUp(email: string, password: string, displayName: string, role: string = 'user'): Promise<void> {
     try {
       const credential = await createUserWithEmailAndPassword(this.auth, email, password);
       
       // Update profile with display name
       await updateProfile(credential.user, { displayName });
       
-      // Send email verification
-      await sendEmailVerification(credential.user);
+       // Send email verification only for regular users
+       if (role === 'user') {
+         await sendEmailVerification(credential.user);
+       }
       
       // Create user document in Firestore
       const userData: UserData = {
         uid: credential.user.uid,
         email: credential.user.email!,
         displayName,
-        role: 'user',
+         role: role as 'user' | 'admin' | 'technician' | 'driver',
         createdAt: new Date(),
         lastLoginAt: new Date(),
-        emailVerified: false
+         emailVerified: role === 'admin' // Admins don't need email verification
       };
       
       await setDoc(doc(this.firestore, 'users', credential.user.uid), userData);
@@ -78,6 +80,21 @@ export class AuthService {
       
       // Update last login time
       await this.updateLastLogin(credential.user.uid);
+       
+       // Get user data to check role
+       const userDoc = await getDoc(doc(this.firestore, 'users', credential.user.uid));
+       if (userDoc.exists()) {
+         const userData = userDoc.data() as UserData;
+         
+         // Navigate based on user role
+         if (userData.role === 'admin') {
+           this.router.navigate(['/admin']);
+         } else if (userData.emailVerified) {
+           this.router.navigate(['/customer/dashboard']);
+         } else {
+           this.router.navigate(['/auth/pending-verification']);
+         }
+       }
       
     } catch (error: any) {
       throw this.handleAuthError(error);
