@@ -1,0 +1,40 @@
+<div class="profile-bar">
+  <img src="/assets/driver-shared-img/client.jpg" alt="Profile" class="profile-image">
+  <div class="profile-info">
+    <p class="header">Mike Johnson</p>
+    <p class="rating">★ 4.9 (127 reviews) · 340 jobs completed</p>
+  </div>
+  <div class="earnings d-flex justify-content-between">
+    <div class="today">
+      <p>$245</p>
+      <h3>Today</h3>
+    </div>
+    <div class="week">
+      <p>$1680</p>
+      <h3>This Week</h3>
+    </div>
+  </div>
+  <span class="availability">{{ availabilityStatus }}</span>
+</div>
+<div class="nav-tabs">
+  <button class="nav-tab" routerLink="/driver/dashboard" routerLinkActive="active">
+    <i class="fas fa-tachometer-alt"></i>
+    Dashboard
+  </button>
+
+  <button class="nav-tab" routerLink="/driver/job" routerLinkActive="active">
+    <i class="fa-solid fa-toolbox"></i>
+    Jobs
+  </button>
+
+  <button class="nav-tab" routerLink="/driver/earnings" routerLinkActive="active">
+    <i class="fa-solid fa-dollar-sign"></i>
+    Earnings
+  </button>
+
+  <button class="nav-tab" routerLink="/driver/profile" routerLinkActive="active">
+    <i class="fas fa-user-cog"></i>
+    Profile
+  </button>
+</div>
+<router-outlet></router-outlet>
