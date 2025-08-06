@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { AuthService } from '../../../Services/auth.service';
+
 @Component({
   selector: 'app-drivers',
   standalone: true,
@@ -28,6 +30,8 @@ export class DriversComponent {
     password: '',
     image: ''
   };
+
+  constructor(private authService: AuthService) {}
 
   drivers = [
     {
@@ -162,7 +166,7 @@ export class DriversComponent {
   }
 
   // إضافة السائق
-  addDriver() {
+  async addDriver() {
     if (
       !this.newDriver.name ||
       !this.newDriver.licenseNumber ||
@@ -178,30 +182,45 @@ export class DriversComponent {
       return;
     }
 
-    const newDriverData = {
-      ...this.newDriver,
-      id: this.drivers.length + 1,
-      image: this.previewImage // استخدام المعاينة كصورة السائق
-    };
+    try {
+      // Create driver account in Firebase
+      await this.authService.signUp(
+        this.newDriver.email,
+        this.newDriver.password,
+        this.newDriver.name,
+        'driver'
+      );
 
-    this.drivers.push(newDriverData);
+      // Add to local drivers array for display
+      const newDriverData = {
+        ...this.newDriver,
+        id: this.drivers.length + 1,
+        image: this.previewImage
+      };
 
-    // تصفير البيانات
-    this.newDriver = {
-      name: '',
-      licenseNumber: '',
-      experience: '',
-      vehicleType: '',
-      joined: '',
-      rating: 0,
-      totalTrips: 0,
-      email: '',
-      password: '',
-      image: ''
-    };
-    this.previewImage = null;
+      this.drivers.push(newDriverData);
 
-    this.closeAddDriverModal();
+      // تصفير البيانات
+      this.newDriver = {
+        name: '',
+        licenseNumber: '',
+        experience: '',
+        vehicleType: '',
+        joined: '',
+        rating: 0,
+        totalTrips: 0,
+        email: '',
+        password: '',
+        image: ''
+      };
+      this.previewImage = null;
+
+      this.closeAddDriverModal();
+      
+      alert('Driver account created successfully!');
+    } catch (error: any) {
+      alert('Error creating driver account: ' + error);
+    }
   }
 
   callDriver(driver: any) {

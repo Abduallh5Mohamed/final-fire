@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../Services/auth.service';
 
 @Component({
   selector: 'app-technicians',
@@ -29,6 +30,8 @@ export class TechniciansComponent {
     password: '',
     image: ''
   };
+
+  constructor(private authService: AuthService) {}
 
   // خيارات الحالات المتاحة
   statusOptions = [
